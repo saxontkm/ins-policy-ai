@@ -17,9 +17,11 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
-    #chat-container {
+    /* Explicitly set dimensions for the target container in fullscreen mode */
+    #n8n-chat {
       width: 100vw;
       height: 100vh;
+      display: flex;
     }
 
     /* Custom CSS Variables for Insurance Theme */
@@ -91,6 +93,23 @@
       --chat--toggle--active--background: var(--chat--color--primary--shade-100);
       --chat--toggle--color: var(--chat--color-white);
       --chat--toggle--size: 64px;
+    }
+
+    /* Override for fullscreen scrolling fix */
+    #n8n-chat .chat-layout {
+      height: 100vh !important;
+      overflow: hidden !important; /* Prevent outer scroll, rely on inner */
+    }
+
+    #n8n-chat .chat-body {
+      flex: 1 !important;
+      overflow-y: auto !important;
+      height: auto !important; /* Let flex handle it */
+    }
+
+    #n8n-chat .recyle-scroller-wrapper {
+      height: 100% !important;
+      overflow-y: auto !important;
     }
   </style>
 </head>
