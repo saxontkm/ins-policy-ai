@@ -3,190 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Insurance Policy Chatbot</title>
-  <!-- n8n Chat Styles -->
+  <title>Insurance Agent Chatbot</title>
+  <!-- Load the CSS for styling -->
   <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet">
   <style>
-    /* Full-page container setup */
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-
-    /* Explicitly set dimensions for the target container in fullscreen mode */
-    #n8n-chat {
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-    }
-
-    /* Custom CSS Variables for Insurance Theme */
     :root {
-      /* Primary color: Professional blue for trust and reliability */
-      --chat--color--primary: #2563eb; /* Blue-600 */
-      --chat--color--primary-shade-50: #1d4ed8; /* Blue-700 */
-      --chat--color--primary--shade-100: #1e40af; /* Blue-800 */
-
-      /* Secondary color: Green for positive actions (e.g., claims approval) */
-      --chat--color--secondary: #059669; /* Emerald-600 */
-      --chat--color-secondary-shade-50: #047857; /* Emerald-700 */
-
-      /* Neutral colors */
-      --chat--color-white: #ffffff;
-      --chat--color-light: #f8fafc; /* Slate-50 */
-      --chat--color-light-shade-50: #e2e8f0; /* Slate-100 */
-      --chat--color-light-shade-100: #cbd5e1; /* Slate-200 */
-      --chat--color-medium: #94a3b8; /* Slate-400 */
-      --chat--color-dark: #0f172a; /* Slate-900 */
-      --chat--color-disabled: #64748b; /* Slate-500 */
-      --chat--color-typing: #334155; /* Slate-700 */
-
-      /* Spacing and layout */
+      --chat--color--primary: #00A884;
+      --chat--color--primary-shade-50: #00997A;
+      --chat--color--primary--shade-100: #008870;
+      --chat--color--secondary: #005C4B;
+      --chat--color-secondary-shade-50: #004F40;
+      --chat--color-white: #E9EDEF;
+      --chat--color-light: #E9EDEF;
+      --chat--color-light-shade-50: #D9DBE1;
+      --chat--color-light-shade-100: #BFC3C9;
+      --chat--color-medium: #8696A0;
+      --chat--color-dark: #111B21;
+      --chat--color-disabled: #54656F;
+      --chat--color-typing: #333E48;
       --chat--spacing: 1rem;
-      --chat--border-radius: 0.5rem; /* Slightly rounded for modern feel */
-      --chat--transition-duration: 0.2s;
-
-      /* Window sizing (not used in fullscreen, but for consistency) */
-      --chat--window--width: 400px;
-      --chat--window--height: 600px;
-
-      /* Header customization: Dark header with white text for branding */
+      --chat--border-radius: 0.5rem;
+      --chat--transition-duration: 0.15s;
+      --chat--window--width: 100%;
+      --chat--window--height: 100%;
       --chat--header-height: auto;
       --chat--header--padding: var(--chat--spacing);
-      --chat--header--background: var(--chat--color-dark);
-      --chat--header--color: var(--chat--color-white);
+      --chat--header--background: #202C33;
+      --chat--header--color: var(--chat--color-light);
       --chat--header--border-top: none;
-      --chat--header--border-bottom: 1px solid var(--chat--color-light-shade-100);
-
-      /* Typography */
-      --chat--heading--font-size: 1.25rem;
-      --chat--subtitle--font-size: 0.875rem;
+      --chat--header--border-bottom: none;
+      --chat--heading--font-size: 1.5em;
+      --chat--subtitle--font-size: 0.875em;
       --chat--subtitle--line-height: 1.5;
-
-      /* Input and message styling */
-      --chat--textarea--height: 56px; /* Slightly taller for better UX */
-      --chat--message--font-size: 0.95rem;
-      --chat--message--padding: calc(var(--chat--spacing) * 0.75);
+      --chat--textarea--height: 50px;
+      --chat--message--font-size: 1rem;
+      --chat--message--padding: 0.75rem 1rem;
       --chat--message--border-radius: var(--chat--border-radius);
-      --chat--message-line-height: 1.6;
-
-      /* Bot messages: Light background with dark text */
-      --chat--message--bot--background: var(--chat--color-light);
-      --chat--message--bot--color: var(--chat--color-dark);
-      --chat--message--bot--border: 1px solid var(--chat--color-light-shade-100);
-
-      /* User messages: Blue background with white text */
-      --chat--message--user--background: var(--chat--color--primary);
+      --chat--message-line-height: 1.4;
+      --chat--message--bot--background: #212E37;
+      --chat--message--bot--color: var(--chat--color-light);
+      --chat--message--bot--border: none;
+      --chat--message--user--background: var(--chat--color--secondary);
       --chat--message--user--color: var(--chat--color-white);
       --chat--message--user--border: none;
-
-      /* Code blocks */
-      --chat--message--pre--background: rgba(15, 23, 42, 0.1); /* Subtle dark overlay */
-
-      /* Toggle (hidden in fullscreen, but defined) */
+      --chat--message--pre--background: rgba(255,255,255,0.05);
       --chat--toggle--background: var(--chat--color--primary);
       --chat--toggle--hover--background: var(--chat--color--primary-shade-50);
       --chat--toggle--active--background: var(--chat--color--primary--shade-100);
       --chat--toggle--color: var(--chat--color-white);
       --chat--toggle--size: 64px;
     }
-
-    /* Override for fullscreen scrolling fix */
-    #n8n-chat .chat-layout {
-      height: 100vh !important;
-      overflow: hidden !important; /* Prevent outer scroll, rely on inner */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: var(--chat--color-dark);
     }
-
-    #n8n-chat .chat-body {
-      flex: 1 !important;
-      overflow-y: auto !important;
-      height: auto !important; /* Let flex handle it */
-    }
-
-    #n8n-chat .recyle-scroller-wrapper {
-      height: 100% !important;
-      overflow-y: auto !important;
+    #n8n-chat {
+      height: 100%;
+      width: 100%;
     }
   </style>
-</head>
-<body>
-  <!-- Full-page chat container -->
-  <div id="n8n-chat"></div>
-
   <script type="module">
+    // Placeholder for the n8n webhook URL
+    const webhookUrl = 'https://ays.app.n8n.cloud/webhook/54ad30d6-9be0-43a6-8905-d391bc17ed2a/chat';
+
+    // Import the createChat function
     import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
-    // Configuration object with all customizable variables defined
-    // Replace 'YOUR_N8N_WEBHOOK_URL' with your actual n8n webhook URL
+    // Initialize the chat with all customization options
     createChat({
-      // Required: n8n webhook URL (production endpoint)
-      webhookUrl: 'https://saxonst.app.n8n.cloud/webhook/d4e463ce-9b16-4854-bdf8-2e40697a552d/chat',
-
-      // Optional: Custom webhook request config (e.g., for auth headers)
-      webhookConfig: {
-        method: 'POST',
-        headers: {
-          // Add custom headers if needed, e.g., 'Authorization': 'Bearer your-token'
-        }
-      },
-
-      // Target container selector (full-page div)
+      webhookUrl: webhookUrl,
+      webhookConfig: { method: 'POST', headers: {} },
       target: '#n8n-chat',
-
-      // Render mode: 'fullscreen' for full-page experience
       mode: 'fullscreen',
-
-      // Key for chat input payload (default: 'chatInput')
       chatInputKey: 'chatInput',
-
-      // Key for session ID in payload (default: 'sessionId')
       chatSessionKey: 'sessionId',
-
-      // Load previous messages for session continuity (recommended for insurance queries)
-      loadPreviousMessages: true,
-
-      // Additional metadata sent with every request (e.g., user context)
-      metadata: {
-        // Example: userType: 'customer',
-        // policyNumber: 'placeholder' // Can be dynamic
-      },
-
-      // Show welcome screen on initial load
+      loadPreviousSession: true,
+      metadata: { context: 'insurance_policy_inquiry' },
       showWelcomeScreen: true,
-
-      // Default language (only 'en' supported currently)
       defaultLanguage: 'en',
-
-      // Initial messages for insurance agent persona
       initialMessages: [
-        'Hello! 👋 I\'m your dedicated Insurance Assistant.',
-        'I can help you inquire about your policy details, file claims, renew coverage, or answer any questions. What would you like to discuss today?'
+        'Hi there! 👋',
+        "I'm your insurance agent assistant. How can I help you with your policy today?"
       ],
-
-      // Internationalization config (customized for insurance theme)
       i18n: {
         en: {
-          title: 'Insurance Policy Assistant', // Custom title
-          subtitle: 'Your 24/7 front-line agent for policy inquiries and support.', // Custom subtitle
-          footer: 'Powered by n8n AI', // Custom footer (optional branding)
-          getStarted: 'Start New Conversation',
-          inputPlaceholder: 'Ask about your policy, claims, or coverage...' // Custom placeholder
+          title: 'Insurance Agent',
+          subtitle: '',
+          footer: '',
+          getStarted: 'Get Started',
+          inputPlaceholder: 'Type your message...'
         }
       },
-
-      // Enable streaming responses (requires workflow support)
       enableStreaming: true,
-
-      // Allow file uploads (useful for uploading policy docs or photos)
-      allowFileUploads: true,
-
-      // Allowed MIME types for uploads (images and PDFs for insurance docs)
-      allowedFilesMimeTypes: 'image/*,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain'
+      allowFileUploads: false,
+      allowedFilesMimeTypes: ''
     });
   </script>
-</body>
+</head>
 </html>
